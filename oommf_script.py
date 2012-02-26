@@ -47,12 +47,15 @@ def main():
             print "End time :", localtime,"\n"
 #            I want the script to output the start and end time.
 ## Reload img_list and check if they are the same
+##        wait_string = raw_input('Please update file structures.txt and press enter.')
         while True:
             try:
                 img_list_new = open('./structures.txt').read().splitlines()
                 if img_list != img_list_new:
                     img_list = img_list_new
                     print('New list loaded successfully');
+                print(img_list)
+                break
             except ValueError:
                 print('Error loading new structure file\nWill try again next time.')
             
