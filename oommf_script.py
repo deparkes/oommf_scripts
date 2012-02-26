@@ -18,17 +18,25 @@ def main():
 #    I want to allow the script to read in a list of image files to simulate.
 #I want the script to read in the file eaach time so that I can update my batch job on the fly.
 ##    img_list = ['Lbar_2um.bmp']
+
+
+## Load the initial list of structure files. 
+    img_list = open('./structures.txt').read().splitlines()
+
     strain_list = ['0']
     # loop through the different devices
     for img_count in img_list:
-        # loop through different values of strain energy for each of
-        # the devices
-##        set the output directory name. if this directory doesn't
+                
+##        Set the output directory name. if this directory doesn't
 ##        exist make it. This means that we can have an automatic
 ##        output folder in the mif file.
 ##        img_dir = '../output/%s' % (img_count)
 ##        if not os.path.exists(img_dir):
 ##            os.makedirs(img_dir)
+
+# loop through different values of strain energy for each of
+# the devices
+
 
         for strain_count in strain_list:
             path_boxsi = path_boxsi_base + ' \"Ks %s img %s \"' % (strain_count,img_count)
