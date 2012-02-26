@@ -49,12 +49,10 @@ def main():
 ## Reload img_list and check if they are the same
         wait_string = raw_input('Update structures.txt then press enter')
         img_list_new = open('./structures.txt').read().splitlines()
-        print(img_list_new)
-        print(img_list)
         if img_list != img_list_new:
             img_list = img_list_new
             
-        print(img_list)
+        
 
 
 
