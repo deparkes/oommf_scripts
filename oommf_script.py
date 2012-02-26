@@ -36,8 +36,6 @@ def main():
 
 # loop through different values of strain energy for each of
 # the devices
-
-
         for strain_count in strain_list:
             path_boxsi = path_boxsi_base + ' \"Ks %s img %s \"' % (strain_count,img_count)
             oommf_string = "%s %s %s" % (path_tcl, path_boxsi,path_mif_file)
@@ -48,6 +46,14 @@ def main():
             localtime = time.asctime( time.localtime(time.time()) )
             print "End time :", localtime,"\n"
 #            I want the script to output the start and end time.
+## Reload img_list and check if they are the same.
+        img_list_new = open('./structures2.txt').read().splitlines()
+        print(img_list_new)
+        print(img_list)
+        if img_list != img_list_new:
+            img_list = img_list_new
+            
+        print(img_list)
 
 
 

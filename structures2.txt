@@ -1,0 +1,6 @@
+square.bmp
+bar.bmp
+circle.bmp
+ring.bmp
+Lbar.bmp
+BigBar.bmp
