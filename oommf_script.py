@@ -46,8 +46,9 @@ def main():
             localtime = time.asctime( time.localtime(time.time()) )
             print "End time :", localtime,"\n"
 #            I want the script to output the start and end time.
-## Reload img_list and check if they are the same.
-        img_list_new = open('./structures2.txt').read().splitlines()
+## Reload img_list and check if they are the same
+        wait_string = raw_input('Update structures.txt then press enter')
+        img_list_new = open('./structures.txt').read().splitlines()
         print(img_list_new)
         print(img_list)
         if img_list != img_list_new:

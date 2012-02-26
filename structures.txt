@@ -3,3 +3,5 @@ bar.bmp
 circle.bmp
 ring.bmp
 Lbar.bmp
+ThisIsNew.bmp
+ThisIsEvenMoreNew.bmp
