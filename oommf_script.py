@@ -14,7 +14,7 @@ def main():
     # this one is a bit quick and dirty, but might be ok
     #os.system(oommf_string)
 ##    img_list = ['Cross_4um.bmp','Lbar_2um.bmp','BarPad_7um_1um.bmp', 'Ring_10um_2um.bmp']
-    img_list = ['Square_5um.bmp','Ring_10um_2um.bmp','BarPad_3um_1um.bmp','BarPad_5um_1um.bmp','BarPad_6um_1um.bmp','BarPad_7um_1um.bmp']
+##    img_list = ['Square_5um.bmp','Ring_10um_2um.bmp','BarPad_3um_1um.bmp','BarPad_5um_1um.bmp','BarPad_6um_1um.bmp','BarPad_7um_1um.bmp']
 #    I want to allow the script to read in a list of image files to simulate.
 #I want the script to read in the file eaach time so that I can update my batch job on the fly.
 ##    img_list = ['Lbar_2um.bmp']
@@ -42,7 +42,7 @@ def main():
             print (' %s \n') % (oommf_string)
             localtime = time.asctime( time.localtime(time.time()) )
             print "Start time :", localtime
-                      subprocess.call(oommf_string)
+            subprocess.call(oommf_string)
             localtime = time.asctime( time.localtime(time.time()) )
             print "End time :", localtime,"\n"
 #            I want the script to output the start and end time.

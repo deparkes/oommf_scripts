@@ -1,9 +1,2 @@
-square.bmp
-bar.bmp
-circle.bmp
-ring.bmp
-Lbar.bmp
-ThisIsNew.bmp
-ThisIsEvenMoreNew.bmp
-WillThisBreakTheScript.bmp
-WhatAboutThis.bmp
+RealSquare_4_4um.bmp
+Cross_4um.bmp
