@@ -1,4 +1,3 @@
-RealSquare_4_4um.bmp
-Cross_4um.bmp
 Steps_10um.bmp
 PadWedge_7_3um.bmp
+
