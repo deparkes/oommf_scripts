@@ -30,9 +30,9 @@ def main():
 ##        Set the output directory name. if this directory doesn't
 ##        exist make it. This means that we can have an automatic
 ##        output folder in the mif file.
-        img_dir = '../output/%s' % (img_count)
-        if not os.path.exists(img_dir):
-            os.makedirs(img_dir)
+##        img_dir = '../output/%s' % (img_count)
+##        if not os.path.exists(img_dir):
+##            os.makedirs(img_dir)
 
 # loop through different values of strain energy for each of
 # the devices
@@ -42,12 +42,12 @@ def main():
             print (' %s \n') % (oommf_string)
             localtime = time.asctime( time.localtime(time.time()) )
             print "Start time :", localtime
-            subprocess.call(oommf_string)
+##            subprocess.call(oommf_string)
             localtime = time.asctime( time.localtime(time.time()) )
             print "End time :", localtime,"\n"
 #            I want the script to output the start and end time.
 ## Reload img_list and check if they are the same
-##        wait_string = raw_input('Please update file structures.txt and press enter.')
+        wait_string = raw_input('Please update file structures.txt and press enter.')
         while True:
             try:
                 img_list_new = open('./structures.txt').read().splitlines()
