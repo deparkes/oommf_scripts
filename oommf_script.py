@@ -22,17 +22,25 @@ def main():
 
 ## Load the initial list of structure files. 
     img_list = open('./structures.txt').read().splitlines()
-
+    img_list_length = len(img_list)
     strain_list = ['0']
     # loop through the different devices
-    for img_count in img_list:
+##array_length = len(list1)
+##x = 0
+##while x < array_length:
+##    list1 = list2
+##    print(list1[x])
+##    x = x + 1
+##    array_length = len(list1)
+    img_count = 0
+    while img_count < img_list_length:
                 
 ##        Set the output directory name. if this directory doesn't
 ##        exist make it. This means that we can have an automatic
 ##        output folder in the mif file.
-        img_dir = '../output/%s' % (img_count)
-        if not os.path.exists(img_dir):
-            os.makedirs(img_dir)
+##        img_dir = '../output/%s' % (img_count)
+##        if not os.path.exists(img_dir):
+##            os.makedirs(img_dir)
 
 # loop through different values of strain energy for each of
 # the devices
@@ -47,20 +55,20 @@ def main():
             print "End time :", localtime,"\n"
 #            I want the script to output the start and end time.
 ## Reload img_list and check if they are the same
-##        wait_string = raw_input('Please update file structures.txt and press enter.')
+        wait_string = raw_input('Please update file structures.txt and press enter.')
         while True:
             try:
+##                img_list_new = open('./structures.txt').read().splitlines()
                 img_list_new = open('./structures.txt').read().splitlines()
                 if img_list != img_list_new:
-                    for i in range(len(img_list_new) - len(img_list)):
-                        img_list.append(img_list_new.pop())
-                        print(img_list)
+                    img_list = img_list_new
+                    print(img_list)
                     print('New list loaded successfully');
-                print(img_list)
                 break
             except ValueError:
                 print('Error loading new structure file\nWill try again next time.')
-            
+      img_list_length = len(img_list)
+      img_count = img_count + 1
         
 
 
