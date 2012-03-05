@@ -135,19 +135,19 @@ Specify Oxs_UniaxialAnisotropy:UniaxialMag [ subst {
 
 
 # ---- Applied Field ------
-#	Specify Oxs_UZeeman 
-#	  multiplier [expr 0.001/$mu0]
-#	  Hrange {     
-#		  { 0  0  0   0.1  0  0 1 }	                
+	Specify Oxs_UZeeman 
+	  multiplier [expr 0.001/$mu0]
+	  Hrange {     
+		  { 0  0  0   0.5 0  0 1 }	                
 							  
-#	  }
+	  }
 
 #Specify Oxs_UZeeman [subst {
 #comment {Set units to mT}
 #multiplier [expr {0.001/$mu0}]
 #Hrange {
-#{ 0 0 0 10 0 0 2 }
-#{ 10 0 0 -10 0 0 2 }
+#{ 0 0 0 10 0 0 NumSteps }
+#{ 10 0 0 -10 0 0 NumSteps }
 #}
 #}]
 # ----- End of Zeeman term ---- 
