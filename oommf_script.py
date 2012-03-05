@@ -33,7 +33,9 @@ def main():
 ##    x = x + 1
 ##    array_length = len(list1)
     img_count = 0
+    img_list_length = len(img_list)
     while img_count < img_list_length:
+        print('initial img_count %d') % (img_count)
                 
 ##        Set the output directory name. if this directory doesn't
 ##        exist make it. This means that we can have an automatic
@@ -45,12 +47,13 @@ def main():
 # loop through different values of strain energy for each of
 # the devices
         for strain_count in strain_list:
-            path_boxsi = path_boxsi_base + ' \"Ks %s img %s \"' % (strain_count,img_count)
+            path_boxsi = path_boxsi_base + ' \"Ks %s img %s \"' % (strain_count,img_list[img_count])
             oommf_string = "%s %s %s" % (path_tcl, path_boxsi,path_mif_file)
             print (' %s \n') % (oommf_string)
             localtime = time.asctime( time.localtime(time.time()) )
             print "Start time :", localtime
-            subprocess.call(oommf_string)
+##            subprocess.call(oommf_string)
+            print('Running OOMMF script number %d...') % (img_count)
             localtime = time.asctime( time.localtime(time.time()) )
             print "End time :", localtime,"\n"
 #            I want the script to output the start and end time.
@@ -67,9 +70,10 @@ def main():
                 break
             except ValueError:
                 print('Error loading new structure file\nWill try again next time.')
-      img_list_length = len(img_list)
-      img_count = img_count + 1
-        
+        img_list_length = len(img_list)
+        img_count = img_count + 1
+        print('Img count = %d; Img list length = %d') %(img_count, img_list_length)
+		
 
 
 
