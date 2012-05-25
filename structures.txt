@@ -1,5 +1,1 @@
-Steps_10um.bmp
-PadWedge_7_3um.bmp
-New.bmp
-Newer.bmp
-Newest.bmp
+Lbar_10um_split.bmp
