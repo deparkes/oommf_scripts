@@ -23,7 +23,7 @@ def main():
     ## Load the initial list of structure files. 
     img_list = open('./structures.txt').read().splitlines()
     img_list_length = len(img_list)
-    strain_list = ['5000', '10000']
+    strain_list = ['0', '5000']
     # loop through the different devices
     ##array_length = len(list1)
     ##x = 0
