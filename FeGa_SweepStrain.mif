@@ -9,7 +9,7 @@ set Ms 1418e3
 set Kc 32.7e3
 set Ku_intrinsic -8.6e3
 Parameter Ks 0
-Parameter img "Lbar_10um_reduced.bmp"
+Parameter img "Lbar_1um_reduced.bmp"
 set outname [format "../output/%s/strain_%s/%s_Ks%.0f_Ms_%.0f" $img $Ks $img $Ks $Ms]
 
 set InputImage  [format "../structure_files/%s" $img]
@@ -22,8 +22,8 @@ set InputImage  [format "../structure_files/%s" $img]
 
 # Specify the size of the area represented by the input image.
 Specify Oxs_ImageAtlas:atlas [ subst {
-xrange { 0 25e-6 }
-yrange { 0 25e-6 }
+xrange { 0 14.5e-6 }
+yrange { 0 2.5e-6 }
 zrange { 0 20e-9 }
 image $InputImage
 viewplane "xy"
@@ -40,7 +40,7 @@ matcherror 1
 # Divide image file into mesh
 # 50nm x 50nm x 20nm
 Specify Oxs_RectangularMesh:mesh {
-  cellsize {20e-9 20e-9 20e-9}
+  cellsize {10e-9 10e-9 10e-9}
   atlas :atlas
 }
 
