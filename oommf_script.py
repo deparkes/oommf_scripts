@@ -2,6 +2,7 @@
 ##C:\Tcl\bin\tclsh84.exe C:\oommf\oommf.tcl boxsi -exitondone 0
 ##-parameters "Ks %1 "
 ##C:/oommf/duncan/FeGa_Simulations/FeGa_Bar_Field_1.mif
+## Todo: make a strain list in the sampe fashion as the structure file list.
 def main():
     import os
     import subprocess
@@ -23,7 +24,7 @@ def main():
     ## Load the initial list of structure files. 
     img_list = open('./structures.txt').read().splitlines()
     img_list_length = len(img_list)
-    strain_list = ['0', '5000']
+    strain_list = ['1000', '5000']
     # loop through the different devices
     ##array_length = len(list1)
     ##x = 0

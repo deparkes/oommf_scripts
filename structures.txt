@@ -1,1 +1,1 @@
-Lbar_10um_reduced.bmp
+Lbar_1um_reduced.bmp
