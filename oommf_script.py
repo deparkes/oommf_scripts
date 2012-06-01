@@ -24,7 +24,9 @@ def main():
     ## Load the initial list of structure files. 
     img_list = open('./structures.txt').read().splitlines()
     img_list_length = len(img_list)
-    strain_list = ['1000', '5000']
+    # strain_list = ['1000', '5000']
+    strain_list = open('./strains.txt').read().splitlines()
+    strain_list_length = len(strain_list)
     # loop through the different devices
     ##array_length = len(list1)
     ##x = 0
@@ -37,20 +39,16 @@ def main():
     
     img_list_length = len(img_list)
     while img_count < img_list_length:
-                      
-
-
         # loop through different values of strain energy for each of
         # the devices
-        for strain_count in strain_list:
+        while strain_count < strain_list_length:
 
-                    ##        Set the output directory name. if this directory doesn't
-        ##        exist make it. This means that we can have an automatic
-        ##        output folder in the mif file.
-            img_dir = '../output/%s/strain_%s' % (img_list[img_count], strain_count)
+        ##   Set the output directory name for this strain and structure.
+        ##   If this directory doesn't exist make it.
+            img_dir = '../output/%s/strain_%s' % (img_list[img_count], strain_list[strain_count])
             if not os.path.exists(img_dir):
                 os.makedirs(img_dir)
-            
+        ## Set and run the full command for boxsi 
             path_boxsi = path_boxsi_base + ' \"Ks %s img %s \"' % (strain_count,img_list[img_count])
             oommf_string = "%s %s %s" % (path_tcl, path_boxsi,path_mif_file)
             print (' %s \n') % (oommf_string)
@@ -60,8 +58,21 @@ def main():
             print('Running OOMMF script number %d...') % (img_count)
             localtime = time.asctime( time.localtime(time.time()) )
             print "End time :", localtime,"\n"
-        #            I want the script to output the start and end time.
-        ## Reload img_list and check if they are the same
+            # For updating the strain list while the python script is running
+            # wait_string = raw_input('Please update file strains.txt and press enter.')
+            while True:
+                try:
+                    strain_list_new = open('./strains.txt').read().splitlines()
+                    if strain_list != strain_list_new:
+                        strain_list = strain_list_new
+                        print(strain_list)
+                        print('New list loaded successfully');
+                    break
+                except ValueError:
+                    print('Error loading new strain file\nWill try again next time.')
+        strain_list_length = len(strain_list)
+        strain_count = strain_count + 1    
+        # Reload img_list and check if they are the same
         # wait_string = raw_input('Please update file structures.txt and press enter.')
         while True:
             try:
