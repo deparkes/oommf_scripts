@@ -27,15 +27,9 @@ def main():
     # strain_list = ['1000', '5000']
     strain_list = open('./strains.txt').read().splitlines()
     strain_list_length = len(strain_list)
-    # loop through the different devices
-    ##array_length = len(list1)
-    ##x = 0
-    ##while x < array_length:
-    ##    list1 = list2
-    ##    print(list1[x])
-    ##    x = x + 1
-    ##    array_length = len(list1)
+
     img_count = 0
+    strain_count = 0
     
     img_list_length = len(img_list)
     while img_count < img_list_length:
@@ -48,16 +42,18 @@ def main():
             img_dir = '../output/%s/strain_%s' % (img_list[img_count], strain_list[strain_count])
             if not os.path.exists(img_dir):
                 os.makedirs(img_dir)
+                
         ## Set and run the full command for boxsi 
-            path_boxsi = path_boxsi_base + ' \"Ks %s img %s \"' % (strain_count,img_list[img_count])
+            path_boxsi = path_boxsi_base + ' \"Ks %s img %s \"' % (strain_list[strain_count],img_list[img_count])
             oommf_string = "%s %s %s" % (path_tcl, path_boxsi,path_mif_file)
             print (' %s \n') % (oommf_string)
             localtime = time.asctime( time.localtime(time.time()) )
             print "Start time :", localtime
-            subprocess.call(oommf_string)
+            #subprocess.call(oommf_string)
             print('Running OOMMF script number %d...') % (img_count)
             localtime = time.asctime( time.localtime(time.time()) )
             print "End time :", localtime,"\n"
+            
             # For updating the strain list while the python script is running
             # wait_string = raw_input('Please update file strains.txt and press enter.')
             while True:
@@ -70,8 +66,9 @@ def main():
                     break
                 except ValueError:
                     print('Error loading new strain file\nWill try again next time.')
-        strain_list_length = len(strain_list)
-        strain_count = strain_count + 1    
+            strain_list_length = len(strain_list)
+            strain_count = strain_count + 1
+        
         # Reload img_list and check if they are the same
         # wait_string = raw_input('Please update file structures.txt and press enter.')
         while True:
@@ -86,6 +83,7 @@ def main():
                 print('Error loading new structure file\nWill try again next time.')
         img_list_length = len(img_list)
         img_count = img_count + 1
+
 
 
 if __name__ == "__main__":
