@@ -49,7 +49,7 @@ def main():
             print (' %s \n') % (oommf_string)
             localtime = time.asctime( time.localtime(time.time()) )
             print "Start time :", localtime
-            #subprocess.call(oommf_string)
+            subprocess.call(oommf_string)
             print('Running OOMMF script number %d...') % (img_count)
             localtime = time.asctime( time.localtime(time.time()) )
             print "End time :", localtime,"\n"

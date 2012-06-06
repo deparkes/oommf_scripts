@@ -40,7 +40,7 @@ matcherror 1
 # Divide image file into mesh
 # 50nm x 50nm x 20nm
 Specify Oxs_RectangularMesh:mesh {
-  cellsize {10e-9 10e-9 10e-9}
+  cellsize {5e-9 5e-9 20e-9}
   atlas :atlas
 }
 
