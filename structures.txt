@@ -1,1 +1,1 @@
-Lbar_1um_reduced.bmp
+1um10umBarWithCrosses.bmp

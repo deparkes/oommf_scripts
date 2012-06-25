@@ -9,7 +9,7 @@ def main():
     import time
     path_tcl = 'C:/Tcl/bin/tclsh84'
     path_boxsi_base = 'C:/oommf/oommf.tcl boxsi -exitondone 1 -parameters'
-    path_mif_file = './FeGa_SweepStrain.mif'
+    path_mif_file = './FeGa_SweepStrainDomainClosure.mif'
     path_image = '../structure_files/'
     oommf_string = "%s %s %s" % (path_tcl, path_boxsi_base,path_mif_file)
     # this one is a bit quick and dirty, but might be ok
