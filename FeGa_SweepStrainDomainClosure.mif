@@ -9,7 +9,7 @@ set Ms 1418e3
 set Kc 32.7e3
 set Ku_intrinsic -8.6e3
 Parameter Ks 0
-Parameter img "1um10umBarWithCrosses.bmp"
+Parameter img "15um90umBarWithCrosses.bmp"
 set outname [format "../output/%s/strain_%s/%s_Ks%.0f_Ms_%.0f" $img $Ks $img $Ks $Ms]
 
 set InputImage  [format "../structure_files/%s" $img]
@@ -22,8 +22,8 @@ set InputImage  [format "../structure_files/%s" $img]
 
 # Specify the size of the area represented by the input image.
 Specify Oxs_ImageAtlas:atlas [ subst {
-xrange { 0 10e-6 }
-yrange { 0 1e-6 }
+xrange { 0 90e-6 }
+yrange { 0 15e-6 }
 zrange { 0 20e-9 }
 image $InputImage
 viewplane "xy"
@@ -41,7 +41,7 @@ matcherror 1
 # Divide image file into mesh
 # 50nm x 50nm x 20nm
 Specify Oxs_RectangularMesh:mesh {
-  cellsize {5e-9 5e-9 5e-9}
+  cellsize {50e-9 50e-9 20e-9}
   atlas :atlas
 }
 
@@ -171,6 +171,8 @@ Hrange {
 Specify Oxs_Demag {}
 
 # Is precession allowed? Step size in LLG derivative?
+# If precess is 0, then precession is disabled and the simulation 
+# evolves towards equilibrium along a steepest descent path
 Specify Oxs_EulerEvolve {
   do_precess 0
   start_dm 0.01

@@ -2,7 +2,10 @@
 ##C:\Tcl\bin\tclsh84.exe C:\oommf\oommf.tcl boxsi -exitondone 0
 ##-parameters "Ks %1 "
 ##C:/oommf/duncan/FeGa_Simulations/FeGa_Bar_Field_1.mif
-## Todo: make a strain list in the sampe fashion as the structure file list.
+## Todo:
+## - add output of input parameters so I can easily see which parameters where used.
+## - Add parameter file so I can import different parameter settings from a single file.
+
 def main():
     import os
     import subprocess
