@@ -9,14 +9,10 @@ set Ms 1418e3
 set Kc 32.7e3
 set Ku_intrinsic -8.6e3
 Parameter Ks 0
-Parameter img "15um90umBarWithCrosses.bmp"
-#Parameter InputOMF "C:/oommf/duncan/FeGa_Simulations/Nanostructures/output/sweep/15um90umBarWithCrosses.bmp/strain_0/15um90umBarWithCrosses.bmp_Ks0_Ms_1418000-Oxs_TimeDriver-Magnetization-00-0009409.omf"
-\\tsclient\C\
-#Parameter InputOMF "//tsclient/C/oommf/duncan/FeGa_Simulations/Nanostructures/output/sweep/15um90umBarWithCrosses.bmp/strain_0/15um90umBarWithCrosses.bmp_Ks0_Ms_1418000-Oxs_TimeDriver-Magnetization-00-0009409.omf"
-set outname [format "../output/sweep/%s/strain_%s/%s_Ks%.0f_Ms_%.0f" $img $Ks $img $Ks $Ms]
+Parameter img "1um10umBarWithCrosses.bmp"
+set outname [format "../output/%s/strain_%s/%s_Ks%.0f_Ms_%.0f" $img $Ks $img $Ks $Ms]
 
 set InputImage  [format "../structure_files/%s" $img]
-# set InputOMF [format "../output/sweep/%s/strain_%s/%s" $img $Ks $input_omf]
 #set InputImage  "./structure_files/Lbar_10um.bmp" 
 
 # Import the device from image file
@@ -26,17 +22,16 @@ set InputImage  [format "../structure_files/%s" $img]
 
 # Specify the size of the area represented by the input image.
 Specify Oxs_ImageAtlas:atlas [ subst {
-xrange { 0 90e-6 }
-yrange { 0 15e-6 }
+xrange { 0 10e-6 }
+yrange { 0 1e-6 }
 zrange { 0 20e-9 }
 image $InputImage
 viewplane "xy"
 colormap {
-blue right
-red left
+blue vertical
+red horizontal
 white universe
-black down
-green up
+black universe
 }
 matcherror 1
 }
@@ -45,7 +40,7 @@ matcherror 1
 # Divide image file into mesh
 # 50nm x 50nm x 20nm
 Specify Oxs_RectangularMesh:mesh {
-  cellsize {50e-9 50e-9 20e-9}
+  cellsize {5e-9 5e-9 20e-9}
   atlas :atlas
 }
 
@@ -122,35 +117,26 @@ Specify Oxs_UniaxialAnisotropy:Strain [ subst {
 # Set up a uniaxial scalar field. Use the atlas version so that different 
 # regions can be specified differently. Have an atlas in the axis as well so 
 # that different regions can have different axes.
-#Specify Oxs_UniaxialAnisotropy:UniaxialMag [ subst {
-#  K1  { Oxs_AtlasScalarField {
-#	   atlas :atlas
-#	   values {
-#		up $Ku_intrinsic
-#		down $Ku_intrinsic
-#		universe 0
-#		}
-#  }  }
-#  
-# axis { Oxs_AtlasVectorField {
-#	   atlas :atlas
-#           norm 1
-#           values {
-#		vertical     { 1 1 0 }
-#		horizontal     { 1 1 0 }
-#		universe { 1 1 0 }
-#		}
-#  } }
-#}]
-
-Specify Oxs_UniaxialAnisotropy [ subst {
-axis { Oxs_UniformVectorField {
-    norm 1
-    vector {1 1 0}
+Specify Oxs_UniaxialAnisotropy:UniaxialMag [ subst {
+  K1  { Oxs_AtlasScalarField {
+	   atlas :atlas
+	   values {
+		vertical $Ku_intrinsic
+		horizontal $Ku_intrinsic
+		universe 0
+		}
+  }  }
+  
+  axis { Oxs_AtlasVectorField {
+	   atlas :atlas
+           norm 1
+           values {
+		vertical     { 1 1 0 }
+		horizontal     { 1 1 0 }
+		universe { 1 1 0 }
+		}
   } }
-K1 $Ku_intrinsic
-} ]
-
+}]
 # ----- End of Uniaxial Anisotropy -------
 
 
@@ -175,8 +161,6 @@ Hrange {
 Specify Oxs_Demag {}
 
 # Is precession allowed? Step size in LLG derivative?
-# If precess is 0, then precession is disabled and the simulation 
-# evolves towards equilibrium along a steepest descent path
 Specify Oxs_EulerEvolve {
   do_precess 0
   start_dm 0.01
@@ -210,18 +194,21 @@ Specify Oxs_TimeDriver [ subst {
    atlas :atlas
    values {
      universe  0
-     up $Ms
-     down $Ms
-     left $Ms
-     right $Ms
-     
+     vertical $Ms
+     horizontal $Ms
      
   } } }
 
-m0 { Oxs_FileVectorField {
-   atlas :atlas
-   file $InputOMF
-  }}
+ m0 { Oxs_AtlasVectorField {
+	
+	atlas :atlas
+	norm 1
+	values {
+		universe { 0 1 0 }
+		horizontal { -1 0 0}
+		vertical { 0 -1 0}
+	}
+   } }
 
   basename $outname  
 }]
