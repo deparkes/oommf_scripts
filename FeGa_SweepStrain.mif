@@ -9,14 +9,15 @@ set Ms 1418e3
 set Kc 32.7e3
 set Ku_intrinsic -8.6e3
 Parameter Ks 0
+
 Parameter img "15um90umBarWithCrosses.bmp"
+# Parameter InputOMF "C:/oommf_pcb/duncan/FeGa_Simulations/Nanostructures/output/sweep/15um90umBarWithCrosses.bmp/strain_0/15um90umBarWithCrosses.bmp_Ks0_Ms_1418000-Oxs_TimeDriver-Magnetization-00-0009409.omf"
 #Parameter InputOMF "C:/oommf/duncan/FeGa_Simulations/Nanostructures/output/sweep/15um90umBarWithCrosses.bmp/strain_0/15um90umBarWithCrosses.bmp_Ks0_Ms_1418000-Oxs_TimeDriver-Magnetization-00-0009409.omf"
-\\tsclient\C\
 #Parameter InputOMF "//tsclient/C/oommf/duncan/FeGa_Simulations/Nanostructures/output/sweep/15um90umBarWithCrosses.bmp/strain_0/15um90umBarWithCrosses.bmp_Ks0_Ms_1418000-Oxs_TimeDriver-Magnetization-00-0009409.omf"
 set outname [format "../output/sweep/%s/strain_%s/%s_Ks%.0f_Ms_%.0f" $img $Ks $img $Ks $Ms]
 
 set InputImage  [format "../structure_files/%s" $img]
-# set InputOMF [format "../output/sweep/%s/strain_%s/%s" $img $Ks $input_omf]
+set InputOMF [format "../output/sweep/%s/strain_%s/%s" $img $Ks $input_omf]
 #set InputImage  "./structure_files/Lbar_10um.bmp" 
 
 # Import the device from image file
@@ -220,7 +221,7 @@ Specify Oxs_TimeDriver [ subst {
 
 m0 { Oxs_FileVectorField {
    atlas :atlas
-   file $InputOMF
+   file "C:/oommf_pcb/duncan/FeGa_Simulations/Nanostructures/output/sweep/15um90umBarWithCrosses.bmp/strain_0/15um90umBarWithCrosses.bmp_Ks0_Ms_1418000-Oxs_TimeDriver-Magnetization-00-0009409.omf"
   }}
 
   basename $outname  
