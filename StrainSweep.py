@@ -22,11 +22,11 @@ def main():
     import os
     import subprocess
     import time
-    #path_tcl = 'C:/Tcl/bin/tclsh84'
-    path_tcl = 'C:/Program Files/Tcl/bin/tclsh83'
+    path_tcl = 'C:/Tcl/bin/tclsh84'
+    #path_tcl = 'C:/Program Files/Tcl/bin/tclsh83'
     #path_tcl = '//tsclient/C/Tcl/bin/tclsh84'
-    #path_boxsi_base = 'C:/oommf/oommf.tcl boxsi -exitondone 1 -parameters'
-    path_boxsi_base = 'C:/oommf_pcb/oommf.tcl boxsi -exitondone 1 -parameters'
+    path_boxsi_base = 'C:/oommf/oommf.tcl boxsi -exitondone 1 -parameters'
+    #path_boxsi_base = 'C:/oommf_pcb/oommf.tcl boxsi -exitondone 1 -parameters'
     #path_boxsi_base = '//tsclient/C/oommf/oommf.tcl boxsi -exitondone 1 -parameters'
     path_mif_file = './FeGa_SweepStrain.mif'
     path_image = '../structure_files/'
