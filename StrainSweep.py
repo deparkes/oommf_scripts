@@ -7,26 +7,32 @@
 ## - Add parameter file so I can import different parameter settings from a single file.
 
 def get_omf(path):
+    # A function to find the omf magnetisation vector files in a particular folder.
+    # Since I only want one I have an if statement to try and protect things. Needs improvements.
+    # Use os.path.basename(path) to strip away everything but the file name from the path.
     import glob
     import os
-    print os.getcwd()
+    # print os.getcwd()
     # os.chdir('../output/15um90umBarWithCrosses.bmp/strain_0');
     omf_path = '%s/*.omf' % (path)
     files = glob.glob(omf_path)
     if len(files) == 1: 
         omf_file = files[0]
+        omf_file = os.path.basename(omf_file)
+        print 'omf file'
+        print omf_file
         return omf_file
-    
+        
 
 def main():
     import os
     import subprocess
     import time
-    path_tcl = 'C:/Tcl/bin/tclsh84'
-    #path_tcl = 'C:/Program Files/Tcl/bin/tclsh83'
+    #path_tcl = 'C:/Tcl/bin/tclsh84'
+    path_tcl = 'C:/Program Files/Tcl/bin/tclsh83'
     #path_tcl = '//tsclient/C/Tcl/bin/tclsh84'
-    path_boxsi_base = 'C:/oommf/oommf.tcl boxsi -exitondone 1 -parameters'
-    #path_boxsi_base = 'C:/oommf_pcb/oommf.tcl boxsi -exitondone 1 -parameters'
+    #path_boxsi_base = 'C:/oommf/oommf.tcl boxsi -exitondone 1 -parameters'
+    path_boxsi_base = 'C:/oommf_pcb/oommf.tcl boxsi -exitondone 1 -parameters'
     #path_boxsi_base = '//tsclient/C/oommf/oommf.tcl boxsi -exitondone 1 -parameters'
     path_mif_file = './FeGa_SweepStrain.mif'
     path_image = '../structure_files/'
@@ -49,7 +55,7 @@ def main():
 
     img_count = 0
     strain_count = 0
-    
+    step_count = 1
     img_list_length = len(img_list)
     while img_count < img_list_length:
         # loop through different values of strain energy for each of
@@ -58,7 +64,7 @@ def main():
 
         ##   Set the output directory name for this strain and structure.
         ##   If this directory doesn't exist make it.
-            img_dir = '../output/sweep/%s/strain_%s' % (img_list[img_count], strain_list[strain_count])
+            img_dir = '../output/sweep/%s/step_%s' % (img_list[img_count], step_count)
             if not os.path.exists(img_dir):
                 os.makedirs(img_dir)
                 
@@ -69,26 +75,30 @@ def main():
         # This first value will take as its starting value the magnetisation file of the strain_0 case.
         # Further strain values use the omf file from the previous value of strain as the starting point. The final
         # omf file will not be used like this as it is the finishing point.
-            if strain_count == 0:
-                initial_omf = '../output/sweep/%s/strain_0' % (img_list[img_count])
+        # I think I can actually just always use the folder from the previous step, assuming I have already made a step_0 folder.
+            print strain_count
+            if step_count == 1:
+                initial_omf = '../output/sweep/%s/step_0' % (img_list[img_count])
                 omf_file =  get_omf(initial_omf)
-                omf_path = '../output/sweep/%s/strain_0/%s' % (img_list[img_count], omf_file)
+                omf_path = '../output/sweep/%s/step_0/%s' % (img_list[img_count], omf_file)
                 
             else:
-                omf_dir = '../output/sweep/%s/strain_%s' % (img_list[img_count], strain_list[strain_count-1])
+                omf_dir = '../output/sweep/%s/step_%s' % (img_list[img_count], step_count - 1)
                 omf_file =  get_omf(omf_dir)
-                omf_path = '../output/sweep/%s/strain_%s/%s' % (img_list[img_count], strain_list[strain_count-1], omf_file)
+                omf_path = '../output/sweep/%s/step_%s/%s' % (img_list[img_count], step_count - 1, omf_file)
                 
             print omf_file
             
                 
         ## Set and run the full command for boxsi 
-            path_boxsi = path_boxsi_base + ' \"Ks %s img %s InputOMF %s\"' % (strain_list[strain_count],img_list[img_count], omf_path)
+            path_boxsi = path_boxsi_base + ' \"Ks %s img %s input_omf %s step_count %s\"' % (strain_list[strain_count],img_list[img_count], omf_path, step_count)
+            # path_boxsi = path_boxsi_base + ' \"Ks %s img %s\"' % (strain_list[strain_count],img_list[img_count])
             oommf_string = "%s %s %s" % (path_tcl, path_boxsi,path_mif_file)
             print (' %s \n') % (oommf_string)
             localtime = time.asctime( time.localtime(time.time()) )
             print "Start time :", localtime
             subprocess.call(oommf_string)
+            step_count = step_count + 1
             print('Running OOMMF script number %d...') % (img_count)
             localtime = time.asctime( time.localtime(time.time()) )
             print "End time :", localtime,"\n"
@@ -123,7 +133,10 @@ def main():
                 print('Error loading new structure file\nWill try again next time.')
         img_list_length = len(img_list)
         img_count = img_count + 1
-
+        
+    # For debugging. If I run this script in a windows command window the following will stop the window from closing before I can read the error message.
+    print "Press return to continue"
+    a=raw_input()
 
 
 if __name__ == "__main__":
