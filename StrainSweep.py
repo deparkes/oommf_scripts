@@ -5,6 +5,7 @@
 ## Todo:
 ## - add output of input parameters so I can easily see which parameters where used.
 ## - Add parameter file so I can import different parameter settings from a single file.
+## - Simplify boxsi input e.g. only pass the input/output folder locations.
 
 def get_omf(path):
     # A function to find the omf magnetisation vector files in a particular folder.
@@ -28,6 +29,7 @@ def main():
     import os
     import subprocess
     import time
+    import datetime
     #path_tcl = 'C:/Tcl/bin/tclsh84'
     path_tcl = 'C:/Program Files/Tcl/bin/tclsh83'
     #path_tcl = '//tsclient/C/Tcl/bin/tclsh84'
@@ -45,7 +47,6 @@ def main():
     #I want the script to read in the file eaach time so that I can update my batch job on the fly.
     ##    img_list = ['Lbar_2um.bmp']
 
-
     ## Load the initial list of structure files. 
     img_list = open('./structures.txt').read().splitlines()
     img_list_length = len(img_list)
@@ -53,6 +54,11 @@ def main():
     strain_list = open('./strains.txt').read().splitlines()
     strain_list_length = len(strain_list)
 
+
+    ## Set the current date so outputs can go to that folder. This will run only on the first run i.e. at the start of sweep of simulations.
+    today = datetime.date.today()
+    folder_date = today.strftime("%d%m%y")
+    
     img_count = 0
     strain_count = 0
     step_count = 1
@@ -64,7 +70,7 @@ def main():
 
         ##   Set the output directory name for this strain and structure.
         ##   If this directory doesn't exist make it.
-            img_dir = '../output/sweep/%s/step_%s' % (img_list[img_count], step_count)
+            img_dir = '../output/sweep/%s/%s/step_%s' % (folder_date,img_list[img_count], step_count)
             if not os.path.exists(img_dir):
                 os.makedirs(img_dir)
                 
@@ -78,20 +84,20 @@ def main():
         # I think I can actually just always use the folder from the previous step, assuming I have already made a step_0 folder.
             print strain_count
             if step_count == 1:
-                initial_omf = '../output/sweep/%s/step_0' % (img_list[img_count])
+                initial_omf = '../output/sweep/%s/%s/step_0' % (folder_date,img_list[img_count])
                 omf_file =  get_omf(initial_omf)
-                omf_path = '../output/sweep/%s/step_0/%s' % (img_list[img_count], omf_file)
+                omf_path = '../output/sweep/%s/%s/step_0/%s' % (folder_date,img_list[img_count], omf_file)
                 
             else:
-                omf_dir = '../output/sweep/%s/step_%s' % (img_list[img_count], step_count - 1)
+                omf_dir = '../output/sweep/%s/%s/step_%s' % (folder_date,img_list[img_count], step_count - 1)
                 omf_file =  get_omf(omf_dir)
-                omf_path = '../output/sweep/%s/step_%s/%s' % (img_list[img_count], step_count - 1, omf_file)
+                omf_path = '../output/sweep/%s/%s/step_%s/%s' % (folder_date,img_list[img_count], step_count - 1, omf_file)
                 
             print omf_file
             
                 
         ## Set and run the full command for boxsi 
-            path_boxsi = path_boxsi_base + ' \"Ks %s img %s input_omf %s step_count %s\"' % (strain_list[strain_count],img_list[img_count], omf_path, step_count)
+            path_boxsi = path_boxsi_base + ' \"Ks %s img %s input_omf %s step_count %s folder_date %s\"' % (strain_list[strain_count],img_list[img_count], omf_path, step_count, folder_date)
             # path_boxsi = path_boxsi_base + ' \"Ks %s img %s\"' % (strain_list[strain_count],img_list[img_count])
             oommf_string = "%s %s %s" % (path_tcl, path_boxsi,path_mif_file)
             print (' %s \n') % (oommf_string)
