@@ -7,22 +7,18 @@ set Ms 1418e3
 
 # Anisotropy constants
 #set Kc 32.7e3
-set Kc 0
 #set Ku_intrinsic -8.6e3
+set Kc 0
 set Ku_intrinsic 0
-Parameter folder_date 250912
+Parameter folder_date 120912
 Parameter Ks 0
 Parameter step_count 0
+
 Parameter img "15um90umBarWithCrosses.bmp"
-#Parameter input_omf "15um90umBarWithCrosses.bmp_Ks0_Ms_1418000-Oxs_TimeDriver-Magnetization-00-0009409.omf"
-Parameter input_omf "C:/oommf_pcb/duncan/FeGa_Simulations/Nanostructures/output/sweep/250912/15um90umBarWithCrosses.bmp/step_0/15um90umBarWithCrosses.bmp_Ks0_Ms_1418000-Oxs_TimeDriver-Magnetization-00-0001078.omf"
-#Parameter InputOMF "C:/oommf/duncan/FeGa_Simulations/Nanostructures/output/sweep/15um90umBarWithCrosses.bmp/strain_0/15um90umBarWithCrosses.bmp_Ks0_Ms_1418000-Oxs_TimeDriver-Magnetization-00-0009409.omf"
-#Parameter InputOMF "//tsclient/C/oommf/duncan/FeGa_Simulations/Nanostructures/output/sweep/15um90umBarWithCrosses.bmp/strain_0/15um90umBarWithCrosses.bmp_Ks0_Ms_1418000-Oxs_TimeDriver-Magnetization-00-0009409.omf"
+#set outname [format "../output/%s/strain_%s/%s_Ks%.0f_Ms_%.0f" $img $Ks $img $Ks $Ms]
 set outname [format "../output/sweep/%s/%s/step_%s/%s_Ks%.0f_Ms_%.0f" $folder_date $img $step_count $img $Ks $Ms]
 
 set InputImage  [format "../structure_files/%s" $img]
-set InputOMF [format "%s" $input_omf]
-#set InputOMF [format "../output/sweep/%s/strain_%s/%s" $img $Ks $input_omf]
 #set InputImage  "./structure_files/Lbar_10um.bmp" 
 
 # Import the device from image file
@@ -31,7 +27,7 @@ set InputOMF [format "%s" $input_omf]
 # Basically you need to [ subst { Normal Stuff in specify block... } ]
 
 # Specify the size of the area represented by the input image.
-Specify Oxs_ImageAtlas:ImageAtlas [ subst {
+Specify Oxs_ImageAtlas:atlas [ subst {
 xrange { 0 90e-6 }
 yrange { 0 15e-6 }
 zrange { 0 20e-9 }
@@ -47,23 +43,6 @@ green up
 matcherror 1
 }
 ]
-
-Specify Oxs_MultiAtlas:atlas {
-
-   atlas { Oxs_BoxAtlas {
-	xrange {45e-6 90e-6}
-	yrange {0 15e-6}
-	zrange {0 20e-9}
-       name  strained
-   }   }   
-	atlas { Oxs_BoxAtlas {
-	xrange {0 45e-6}
-	yrange {0 15e-6}
-	zrange {0 20e-9}
-       name unstrained
-   }   }
-
-}
 
 # Divide image file into mesh
 # 50nm x 50nm x 20nm
@@ -113,24 +92,8 @@ Specify Oxs_CubicAnisotropy:CubicMag [ subst {
 #K1 $Ks
 #}]
 
-# Simple homogeneous strain:
-#Specify Oxs_UniaxialAnisotropy:Strain [ subst {
-#  K1 { Oxs_UniformScalarField { value  $Ks } }
-#  axis { Oxs_UniformVectorField {
-#    norm 1
-#    vector {0 1 0}
-#  } }
-#} ]
-
-#Attempt to have different strain depending on atlas
-Specify Oxs_UniaxialAnisotropy:strain [ subst {
-  K1 { Oxs_AtlasScalarField {
-    atlas :atlas
-    values {
-        unstrained 0
-	strained $Ks
-    }
-  }}
+Specify Oxs_UniaxialAnisotropy:Strain [ subst {
+  K1 { Oxs_UniformScalarField { value  $Ks } }
   axis { Oxs_UniformVectorField {
     norm 1
     vector {0 1 0}
@@ -241,13 +204,12 @@ Specify Oxs_EulerEvolve {
 # Can replace Ms scalar field with a random field one. See doc for details.
 # If you just want the simulation to run until ~static use stopping_dm_dt.
 # According to the help a value of 0.1 - 1.0 is reasonable.
-
 Specify Oxs_TimeDriver [ subst {
  evolver Oxs_EulerEvolve
  stopping_dm_dt 1.0
  mesh :mesh
  Ms {Oxs_AtlasScalarField {
-   atlas :ImageAtlas
+   atlas :atlas
    values {
      universe  0
      up $Ms
@@ -257,29 +219,22 @@ Specify Oxs_TimeDriver [ subst {
      
      
   } } }
-m0 { Oxs_FileVectorField {
-   atlas :atlas
-   file $InputOMF
-  }}
+
+ m0 { Oxs_AtlasVectorField {
+	
+	atlas :atlas
+	norm 1
+	values {
+		universe { 0 1 0 }
+		left { -1 0 0}
+		right { 1 0 0}
+		up { 0 1 0}
+		down { 0 -1 0}
+	}
+   } }
 
   basename $outname  
 }]
-
-
-# For using regions from imported regions or other atlas to set M0 (rather than  file)
-# m0 { Oxs_AtlasVectorField {
-	
-#	atlas :atlas
-#	norm 1
-#	values {
-#		up { 0 1 0 }
-#		down { 0 -1 0}
-#		left { -1 0 0}
-#		right {1 0 0}
-
-#	}
-#   } }
-
 # Specify what you want to be saved by default
 # These will be displayed/saved when run as a script from the command line
 # Important to distinguish between (time) steps and stages
