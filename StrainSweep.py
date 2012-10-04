@@ -38,6 +38,8 @@ def main():
     #path_boxsi_base = '//tsclient/C/oommf/oommf.tcl boxsi -exitondone 1 -parameters'
     path_mif_file = './FeGa_SweepStrain.mif'
     path_image = '../structure_files/'
+    if not os.path.exists(path_image):
+        print('Could not find path to image directory')
     oommf_string = "%s %s %s" % (path_tcl, path_boxsi_base,path_mif_file)
     # this one is a bit quick and dirty, but might be ok
     #os.system(oommf_string)
