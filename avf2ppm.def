@@ -1,0 +1,31 @@
+array set plot_config {
+    colormaps  {
+        Red-Black-Blue     Blue-White-Red      Teal-White-Red
+        Black-Gray-White   Black-White-Black   White-Black-White
+        White-Green-Black  Red-Green-Blue-Red
+    }
+    arrow,status       1               misc,background     #FFFFFF
+    arrow,colormap  Black-Gray-White   misc,drawboundary   1
+    arrow,colorcount   0               misc,boundarywidth  1
+    arrow,quantity     z               misc,boundarycolor  #000000
+    arrow,colorphase   0.              misc,boundarypos    front
+    arrow,colorinvert  0               misc,matwidth       0
+    arrow,autosample   1               misc,matcolor       #FFFFFF
+    arrow,subsample    10              misc,margin         10
+    arrow,size         1               misc,width          640
+    arrow,antialias    1               misc,height         480
+                                       misc,crop           1
+    pixel,status       1               misc,zoom           0
+    pixel,colormap  Teal-White-Red     misc,rotation       0
+    pixel,colorcount   225             misc,datascale      0
+    pixel,opaque       1               misc,centerpt       {}
+    pixel,quantity     x
+    pixel,colorphase   0.              viewaxis            {+z}
+    pixel,colorinvert  0               viewaxis,center     {}
+    pixel,autosample   1               viewaxis,xarrowspan {}
+    pixel,subsample    0               viewaxis,xpixelspan {}
+    pixel,size         1               viewaxis,yarrowspan {}
+                                       viewaxis,ypixelspan {}
+                                       viewaxis,zarrowspan {}
+                                       viewaxis,zpixelspan {}
+}
