@@ -26,7 +26,7 @@ def main(argv):
     #start_dir = os.getcwd()
     files = get_omf(start_dir)
     #command_to_run = 'avf2ppm -config %s -format B24 %s' % (config_file,files)
-    i = 1
+    i = 0
     while i < len(files):
         command_to_run = 'avf2ppm -format B24 %s' % (files[i])
         run_string = '%s %s %s' % (path_tcl, path_oommf, command_to_run)
