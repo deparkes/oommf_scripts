@@ -1,3 +1,4 @@
+import sys
 def get_omf(path):
     # A function to find the omf magnetisation vector files in a particular folder.
     # Since I only want one I have an if statement to try and protect things. Needs improvements.
@@ -12,18 +13,19 @@ def get_omf(path):
     files = os.path.basename(files_array[0])
     return files
 
-def main():
+def main(argv):
     import os
     import subprocess
     import time
     import datetime
+    start_dir = argv[1]
     path_to_omf = os.getcwd()
     path_tcl = 'C:/Program Files/Tcl/bin/tclsh83'
     path_oommf  = 'C:/oommf/oommf.tcl'
     #config_file = './avf2ppm.def'
-    start_dir = os.getcwd()
+    #start_dir = os.getcwd()
 
-    for root, dirs, files in os.walk(os.getcwd()):
+    for root, dirs, files in os.walk(start_dir):
         # make sure that we are at the end of the path
         # i.e. that there are no subdirectories
         if len(dirs) == 0:
@@ -42,4 +44,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    main(sys.argv)
