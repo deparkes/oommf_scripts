@@ -1,0 +1,296 @@
+# MIF 2.1
+set pi [expr 4*atan(1.0)]
+set mu0 [expr 4*$pi*1e-7]
+
+# Ms in A/m
+set Ms 1378e3
+
+# Anisotropy constants
+set Kc 32.7e3
+#set Kc 0
+set Ku_intrinsic 8.6e3
+#set Ku_intrinsic 0
+Parameter folder_date 250912
+Parameter Ks 0
+Parameter step_count 0
+Parameter img "15um90umBarWithCrosses.bmp"
+#Parameter input_omf "15um90umBarWithCrosses.bmp_Ks0_Ms_1418000-Oxs_TimeDriver-Magnetization-00-0009409.omf"
+Parameter input_omf "C:/oommf_pcb/duncan/FeGa_Simulations/Nanostructures/output/sweep/250912/15um90umBarWithCrosses.bmp/step_0/15um90umBarWithCrosses.bmp_Ks0_Ms_1418000-Oxs_TimeDriver-Magnetization-00-0001078.omf"
+#Parameter InputOMF "C:/oommf/duncan/FeGa_Simulations/Nanostructures/output/sweep/15um90umBarWithCrosses.bmp/strain_0/15um90umBarWithCrosses.bmp_Ks0_Ms_1418000-Oxs_TimeDriver-Magnetization-00-0009409.omf"
+#Parameter InputOMF "//tsclient/C/oommf/duncan/FeGa_Simulations/Nanostructures/output/sweep/15um90umBarWithCrosses.bmp/strain_0/15um90umBarWithCrosses.bmp_Ks0_Ms_1418000-Oxs_TimeDriver-Magnetization-00-0009409.omf"
+set outname [format "../output/sweep/%s/%s/step_%s/%s_Ks%.0f_Ms_%.0f" $folder_date $img $step_count $img $Ks $Ms]
+
+set InputImage  [format "../structure_files/%s" $img]
+set InputOMF [format "%s" $input_omf]
+#set InputOMF [format "../output/sweep/%s/strain_%s/%s" $img $Ks $input_omf]
+#set InputImage  "./structure_files/Lbar_10um.bmp" 
+
+# Import the device from image file
+# See 'Variable Substitution' on http://math.nist.gov/oommf/doc/userguide12a3/userguide/MIF_2.1.html for details.
+# This also has good info on scripting as well I think
+# Basically you need to [ subst { Normal Stuff in specify block... } ]
+
+# Specify the size of the area represented by the input image.
+Specify Oxs_ImageAtlas:ImageAtlas [ subst {
+xrange { 0 90e-6 }
+yrange { 0 15e-6 }
+zrange { 0 20e-9 }
+image $InputImage
+viewplane "xy"
+colormap {
+blue right
+red left
+white universe
+black down
+green up
+}
+matcherror 1
+}
+]
+
+Specify Oxs_MultiAtlas:atlas {
+
+   atlas { Oxs_BoxAtlas {
+	xrange {15e-6 75e-6}
+	yrange {0 15e-6}
+	zrange {0 20e-9}
+       name  strained
+   }   }   
+	atlas { Oxs_BoxAtlas {
+	xrange {0 15e-6}
+	yrange {0 15e-6}
+	zrange {0 20e-9}
+       name unstrained
+   }   }
+   
+   	atlas { Oxs_BoxAtlas {
+	xrange {75e-6 90e-6}
+	yrange {0 15e-6}
+	zrange {0 20e-9}
+       name unstrained2
+   }   }
+
+}
+
+# Divide image file into mesh
+# 50nm x 50nm x 20nm
+Specify Oxs_RectangularMesh:mesh {
+  cellsize {50e-9 50e-9 20e-9}
+  atlas :atlas
+}
+
+# Exchange anisotropy term
+# Value 'A' specifies exchange constant.
+Specify Oxs_UniformExchange:FeGa {
+  A  1.4e-11
+}
+
+# ------- Cubic Anisotropy Term -------
+# Example from example 'squarecubic.mif'
+#Specify Oxs_CubicAnisotropy {
+#  K1 { Oxs_UniformScalarField { value 530e3 } }
+#  axis1 { Oxs_UniformVectorField {
+#    norm 1
+#    vector {1 1 0}
+#  } }
+#  axis2  { Oxs_UniformVectorField {
+#    norm 1
+#    vector {1 -1 0}
+#  } }
+#}
+
+# Set up 100, 010 cubic axes, using set value of Kc.
+Specify Oxs_CubicAnisotropy:CubicMag [ subst {
+  K1 { Oxs_UniformScalarField { value $Kc } }
+  axis1 { Oxs_UniformVectorField {
+    norm 1
+    vector {1 0 0}
+  } }
+  axis2  { Oxs_UniformVectorField {
+    norm 1
+    vector {0 1 0}
+  } }
+}]
+# ----- End of cubic term -----
+
+# ----- Strain Anisotropy Term -----
+#Old
+#Specify Oxs_UniaxialAnisotropy:Strain [ subst {
+#axis { 1 0 0 }
+#K1 $Ks
+#}]
+
+# Simple homogeneous strain:
+Specify Oxs_UniaxialAnisotropy:Strain [ subst {
+  K1 { Oxs_UniformScalarField { value  $Ks } }
+  axis { Oxs_UniformVectorField {
+    norm 1
+    vector {0 1 0}
+  } }
+} ]
+
+#Attempt to have different strain depending on atlas
+#Specify Oxs_UniaxialAnisotropy:strain [ subst {
+#  K1 { Oxs_AtlasScalarField {
+#    atlas :atlas
+#    values {
+#        unstrained 0
+#	strained $Ks
+#    }
+#  }}
+#  axis { Oxs_UniformVectorField {
+#    norm 1
+#    vector {0 1 0}
+#  } }
+#} ]
+# ---- End of strain term ----
+
+
+# --- Uniaxial magnetocrystalline term ----
+#Specify Oxs_UniaxialAnisotropy [ subst {
+#axis { Oxs_UniformVectorField {
+#    norm 1
+#    vector {1 1 0}
+#  } }
+#K1 $Ku_intrinsic
+#}]
+# Uniaxial anistropy
+
+# From an example (rect.mif)
+#Specify Oxs_UniaxialAnisotropy {
+#  K1 { Oxs_UniformScalarField { value  6.2831853e4 } }
+#  axis { Oxs_UniformVectorField {
+#    norm 1
+#    vector {0 1 0}
+#  } }
+#}
+
+# Set up a uniaxial scalar field. Use the atlas version so that different 
+# regions can be specified differently. Have an atlas in the axis as well so 
+# that different regions can have different axes.
+#Specify Oxs_UniaxialAnisotropy:UniaxialMag [ subst {
+#  K1  { Oxs_AtlasScalarField {
+#	   atlas :atlas
+#	   values {
+#		up $Ku_intrinsic
+#		down $Ku_intrinsic
+#		universe 0
+#		}
+#  }  }
+#  
+# axis { Oxs_AtlasVectorField {
+#	   atlas :atlas
+#           norm 1
+#           values {
+#		vertical     { 1 1 0 }
+#		horizontal     { 1 1 0 }
+#		universe { 1 1 0 }
+#		}
+#  } }
+#}]
+
+Specify Oxs_UniaxialAnisotropy [ subst {
+axis { Oxs_UniformVectorField {
+    norm 1
+    vector {1 1 0}
+  } }
+K1 $Ku_intrinsic
+} ]
+
+# ----- End of Uniaxial Anisotropy -------
+
+
+# ---- Applied Field ------
+Specify Oxs_UZeeman [subst {
+multiplier [expr {0.001/$mu0}]
+Hrange {
+{ 0 0 0 0 0 0 0 }
+}
+}]
+
+#Specify Oxs_UZeeman [subst {
+#comment {Set units to mT}
+#multiplier [expr {0.001/$mu0}]
+#Hrange {
+#{ 0 0 0 10 0 0 NumSteps }
+#{ 10 0 0 -10 0 0 NumSteps }
+#}
+#}]
+# ----- End of Zeeman term ---- 
+#Specify that the script should determine the demagnetising term.
+Specify Oxs_Demag {}
+
+# Is precession allowed? Step size in LLG derivative?
+# If precess is 0, then precession is disabled and the simulation 
+# evolves towards equilibrium along a steepest descent path
+Specify Oxs_EulerEvolve {
+  do_precess 0
+  start_dm 0.01
+  fixed_spins {
+    atlas
+    unstrained2 unstrained
+    }
+}
+
+# ---- Set us up the time driver ----
+# Should be of the form:
+#Specify Oxs TimeDriver:name {
+#evolver evolver spec
+#mesh mesh spec
+#Ms scalar field spec
+#m0 vector field spec
+#stopping dm dt torque criteria
+#stopping time time criteria
+#stage iteration limit stage iteration count
+#total iteration limit total iteration count
+#stage count number of stages
+#stage count check test
+#basename base file name
+#scalar output format format
+#vector field output format { style precision }
+#}
+# Can replace Ms scalar field with a random field one. See doc for details.
+# If you just want the simulation to run until ~static use stopping_dm_dt.
+# According to the help a value of 0.1 - 1.0 is reasonable.
+
+Specify Oxs_TimeDriver [ subst {
+ evolver Oxs_EulerEvolve
+ stopping_dm_dt 1.0
+ mesh :mesh
+  Ms $Ms  
+     
+ m0 { Oxs_FileVectorField {
+   atlas :ImageAtlas
+   file $InputOMF
+  }}
+
+  basename $outname  
+}]
+
+
+# For using regions from imported regions or other atlas to set M0 (rather than  file)
+# m0 { Oxs_AtlasVectorField {
+	
+#	atlas :atlas
+#	norm 1
+#	values {
+#		up { 0 1 0 }
+#		down { 0 -1 0}
+#		left { -1 0 0}
+#		right {1 0 0}
+
+#	}
+#   } }
+
+# Specify what you want to be saved by default
+# These will be displayed/saved when run as a script from the command line
+# Important to distinguish between (time) steps and stages
+Destination strain_graph mmGraph 
+Destination strain_archive mmArchive
+Destination strain_display mmDisp 
+
+Schedule DataTable strain_graph Step 1
+Schedule DataTable strain_archive Step 1
+Schedule Oxs_TimeDriver::Magnetization strain_archive Stage 1
+Schedule Oxs_TimeDriver::Magnetization strain_display Step 100
+Schedule Oxs_Demag::Field strain_archive Stage 1
