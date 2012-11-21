@@ -184,7 +184,7 @@ Specify Oxs_TimeDriver [ subst {
  stopping_dm_dt 1.0
  mesh :mesh
  Ms {Oxs_AtlasScalarField {
-   atlas :ImageAtlas
+   atlas :atlas
    values {
      universe  0
      up $Ms
