@@ -14,7 +14,8 @@ Parameter Ks 0
 Parameter img "15um90umBarWithCrosses.bmp"
 #set outname [format "../output/%s/strain_%s/%s_Ks%.0f_Ms_%.0f" $img $Ks $img $Ks $Ms]
 
-set outname [format "../output/sweep/%s/%s/step_%s/%s_Ks%.0f_Ms_%.0f" $folder_date $img $step_count $img $Ks $Ms]
+# set outname [format "../output/sweep/%s/%s/step_%s/%s_Ks%.0f_Ms_%.0f" $folder_date $img $step_count $img $Ks $Ms]
+set outname [format "../output/%s_Ks%.0f_Ms_%.0f" $img $Ks $Ms]
 #set outname [format "C:/oommf_pcb/duncan/FeGa_Simulations/Nanostructures/output/sweep/%s/%s/step_%s/%s_Ks%.0f_Ms_%.0f" $folder_date $img $step_count $img $Ks $Ms]
 #set outname [format "../output/sweep/111012/%s_Ks%.0f_Ms_%.0f"  $img $Ks $Ms]
 set InputImage  [format "../structure_files/%s" $img]
